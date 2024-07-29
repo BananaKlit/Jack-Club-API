@@ -1,16 +1,14 @@
 const supabase = require("../../config/supabase");
-const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
 
 
-exports.login = async (req, res) => {
+
+exports.adminLogin = async (req, res) => {
 	const { email, password } = req.body;
 	try {
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email: email,
 			password: password
 		});
-		console.log(email,password)
 		if (error) {
 			console.error("Error signing in:", error);
 			return res.status(401).json({ error: "Invalid credentials" });
@@ -21,57 +19,91 @@ exports.login = async (req, res) => {
 			.from("Responsable")
 			.select("*")
 			.eq("id", data.user.id)
-			.eq("role", "back-office")
+			.eq("role", "admin")
 			.single();
 
 		if (adminError || !adminData) {
 			return res.status(403).json({ error: "Access denied" });
 		}
 
-		const token = generateJWT(data.user.id);
-		setResponseHeaders(res);
-		res.status(200).json({ data, token });
+		res.status(200).json({access_token: data.session.access_token,adminData} );
+
 	} catch (err) {
 		console.error("Error during login:", err);
-		res.status(500).json({ error: "Internal server error" });
+		res.status(403).json({error:"Access denied"})
 	}
 };
 
-function generateJWT(userId) {
-	return jwt.sign({ userId }, 'q5$28k3y');
-}
-
-function setResponseHeaders(res) {
-	res.header('Access-Control-Allow-Origin', '*');//this changes in production
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-	res.header('Access-Control-Allow-Credentials', 'true');
-}
 
 
 
-function generateJWT(userId) {
-	return jwt.sign({ userId }, 'q5$28k3y');
-}
+exports.valetLogin = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email: email,
+			password: password
+		});
+
+			if (error) {
+				console.error("Error signing in:", error);
+				return res.status(401).json({ error: "Invalid credentials" });
+			}
 
 
+		const { data: valetData, error: valetError } = await supabase
+			.from("valet")
+			.select("*")
+			.eq("id", data.user.id)
+			.eq("role", "user")
+			.single();
 
-function validateJWT(req, res, next) {
-	const authHeader = req.headers['authorization'];
-	const token = authHeader && authHeader.split(' ')[1];
-
-	if (token == null) {
-		return res.sendStatus(401);
-	}
-
-	jwt.verify(token, 'q5$28k3y', (err, user) => {
-		if (err) {
-			return res.sendStatus(403);
+		if (valetError || !valetData) {
+			return res.status(403).json({ valetError: "Access denied" });
 		}
-		req.user = user;
-		next();
-	});
-}
+
+		res.status(200).json({access_token: data.session.access_token, valetData } );
+	} catch (error) {
+		console.error("Error during login:", error);
+		res.status(403).json({ err: "Error during login" });
+	}
+};
+
+
+exports.clientLogin = async (req, res) => {
+	const { email, password } = req.body;
+	try {
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email: email,
+			password: password
+		});
+
+		if (error) {
+			console.error("Error signing in:", error);
+			return res.status(401).json({ error: "Invalid credentials" });
+		}
+
+		const { data: clientData, error: clientError } = await supabase
+		.from("client")
+		.select("*")
+		.eq("id", data.user.id)
+		.eq("role", "user")
+		.single();
+
+	if (clientError || !clientData) {
+		return res.status(403).json({ error: "Access denied" });
+	}	
+	
+		res.status(200).json({access_token:data.session.access-token,clientData});
+	} catch (err) {
+		console.error("Error during login:", err);
+		res.status(403).json({err:"Error during login:"});
+	}
+};
+
+
+
+
 
 
 
