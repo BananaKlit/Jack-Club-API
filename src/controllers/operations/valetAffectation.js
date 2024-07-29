@@ -1,4 +1,4 @@
-const supabase = require("../../config/supabase");
+const {supabase} = require("../../config/supabase");
 
 // Get all Operation
 exports.getAllOperation = async (req, res) => {
