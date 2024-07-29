@@ -1,6 +1,7 @@
-const {supabase} = require("../../config/supabase");
 
-// Get all admins
+const { supabase } = require("../../config/supabase");
+
+
 exports.getAllAdmins = async (req, res) => {
     try {
         const { data, error } = await supabase

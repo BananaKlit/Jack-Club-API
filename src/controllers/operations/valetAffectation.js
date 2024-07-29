@@ -1,6 +1,9 @@
-const {supabase} = require("../../config/supabase");
 
-// Get all Operation
+
+
+const { supabase } = require("../../config/supabase");
+
+
 exports.getAllOperation = async (req, res) => {
 	const { data, error } = await supabase
 		.from("operations")

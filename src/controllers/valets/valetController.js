@@ -1,6 +1,8 @@
-const {supabase} = require("../../config/supabase");
 
-// Get all valets
+
+const { supabase } = require("../../config/supabase");
+
+
 exports.getAllValets = async (req, res) => {
 	const { data, error } = await supabase.from("Valet").select("*");
 	if (error) return res.status(400).json({ error: error.message });
