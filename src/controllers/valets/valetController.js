@@ -1,4 +1,4 @@
-const supabase = require("../config/supabase");
+const supabase = require("../../config/supabase");
 
 // Get all valets
 exports.getAllValets = async (req, res) => {
