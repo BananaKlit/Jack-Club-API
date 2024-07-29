@@ -26,7 +26,7 @@ exports.adminLogin = async (req, res) => {
 			return res.status(403).json({ error: "Access denied" });
 		}
 
-		res.status(200).json(data.session.access-token, adminData );
+		res.status(200).json({access_token: data.session.access_token,adminData} );
 
 	} catch (err) {
 		console.error("Error during login:", err);
@@ -62,7 +62,7 @@ exports.valetLogin = async (req, res) => {
 			return res.status(403).json({ valetError: "Access denied" });
 		}
 
-		res.status(200).json(data.session.access-token, valetData );
+		res.status(200).json({access_token: data.session.access_token, valetData } );
 	} catch (error) {
 		console.error("Error during login:", error);
 		res.status(403).json({ err: "Error during login" });
@@ -92,8 +92,9 @@ exports.clientLogin = async (req, res) => {
 
 	if (clientError || !clientData) {
 		return res.status(403).json({ error: "Access denied" });
-	}
-		res.status(200).json(data.session.access-token,clientData);
+	}	
+	
+		res.status(200).json({access_token:data.session.access-token,clientData});
 	} catch (err) {
 		console.error("Error during login:", err);
 		res.status(403).json({err:"Error during login:"});
