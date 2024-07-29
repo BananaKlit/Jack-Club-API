@@ -1,4 +1,6 @@
-const supabase = require("../../config/supabase");
+const {supabase, supabaseSecret} = require("../../config/supabase");
+const { verify } = require('jsonwebtoken');
+
 
 
 
@@ -33,8 +35,6 @@ exports.adminLogin = async (req, res) => {
 		res.status(403).json({error:"Access denied"})
 	}
 };
-
-
 
 
 exports.valetLogin = async (req, res) => {
@@ -93,7 +93,6 @@ exports.clientLogin = async (req, res) => {
 	if (clientError || !clientData) {
 		return res.status(403).json({ error: "Access denied" });
 	}	
-	
 		res.status(200).json({access_token:data.session.access-token,clientData});
 	} catch (err) {
 		console.error("Error during login:", err);
@@ -101,8 +100,26 @@ exports.clientLogin = async (req, res) => {
 	}
 };
 
+//Jwt validation
+exports.authenticateToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+	console.log("Auth Header:"+authHeader)
+    const token = authHeader
+	console.log("Token:"+token)
+	
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
-
+    try {
+        // Verify the token using your JWT secret
+        const decodedToken = verify(token, supabaseSecret);
+		console.log("Decoded Token"+decodedToken)
+        next();
+    } catch (error) {
+        return res.status(401).json({decodedToken:decodedToken, error: 'Invalid token' });
+    }
+};
 
 
 

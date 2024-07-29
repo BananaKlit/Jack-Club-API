@@ -1,10 +1,22 @@
-const supabase = require("../../config/supabase");
+const {supabase} = require("../../config/supabase");
 
 // Get all admins
 exports.getAllAdmins = async (req, res) => {
-	const { data, error } = await supabase.from("Responsable").select("*");
-	if (error) return res.status(400).json({ error: error.message });
-	res.status(200).json(data);
+    try {
+        const { data, error } = await supabase
+            .from('Responsable')
+            .select('*')
+        
+        if (error) {
+            console.error('Error fetching admins:', error); // Log the error for debugging
+            return res.status(400).json({ error: 'Unable to fetch admins.' });
+        }
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error('Unexpected error:', err); 
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 // Get admin by ID

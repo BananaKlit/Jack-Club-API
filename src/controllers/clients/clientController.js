@@ -1,11 +1,25 @@
-const supabase = require("../../config/supabase");
+
+const { supabase } = require('../../config/supabase'); // Ensure the path is correct
 
 // Get all clients
 exports.getAllClients = async (req, res) => {
-	const { data, error } = await supabase.from("client").select("*");
-	if (error) return res.status(400).json({ error: error.message });
-	res.status(200).json(data);
+    try {
+        const { data, error } = await supabase
+            .from('client')
+            .select('*');
+        
+        if (error) {
+            console.error('Error fetching clients:', error);
+            return res.status(400).json({ error: 'Unable to fetch clients.' });
+        }
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error('Unexpected error:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
+
 
 // Get client by ID
 exports.getClientById = async (req, res) => {
