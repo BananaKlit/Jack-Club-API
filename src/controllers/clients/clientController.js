@@ -1,7 +1,9 @@
 
+
+
 const { supabase } = require('../../config/supabase'); // Ensure the path is correct
 
-// Get all clients
+
 exports.getAllClients = async (req, res) => {
     try {
         const { data, error } = await supabase
