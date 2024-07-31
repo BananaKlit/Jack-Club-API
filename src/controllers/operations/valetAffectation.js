@@ -1,9 +1,6 @@
+const supabase = require("../../config/supabase");
 
-
-
-const { supabase } = require("../../config/supabase");
-
-
+// Get all Operation
 exports.getAllOperation = async (req, res) => {
 	const { data, error } = await supabase
 		.from("operations")
@@ -146,7 +143,7 @@ exports.affectValet = async (req, res) => {
 		.from("operations")
 		.select("*")
 		.eq("code_operation", code_operation)
-		.eq("status", "Completed");
+		.eq("status", "Waiting Valet Return");
 
 	if (errorCompleted) {
 		return res.status(400).json({ error: errorCompleted.message });
@@ -161,11 +158,11 @@ exports.affectValet = async (req, res) => {
 			.update({
 				valet_aller: valetAller,
 				id_valet: id_valet,
-				status: "Ended",
+				status: "Affected",
 				affected_return_at: new Date().toISOString(),
 			})
 			.eq("code_operation", code_operation)
-			.eq("status", "Completed");
+			.eq("status", "Waiting Valet Return");
 
 		if (operationError) {
 			return res.status(400).json({ error: operationError.message });
