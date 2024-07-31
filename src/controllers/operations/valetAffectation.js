@@ -108,6 +108,7 @@ exports.getAllAvailableValet = async (req, res) => {
 // 		confirmed: isConfirmed,
 // 	});
 // };
+
 exports.affectValet = async (req, res) => {
 	const id_valet = req.body.idValet;
 	const code_operation = req.body.codeOperation;
