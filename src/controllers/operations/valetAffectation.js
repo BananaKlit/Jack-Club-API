@@ -7,7 +7,6 @@ const { supabase } = require("../../config/supabase");
 exports.getAllOperation = async (req, res) => {
 	const { data, error } = await supabase
 		.from("operations")
-
 		.select("*")
 		.eq("status", "Pending");
 	if (error) return res.status(400).json({ error: error.message });
@@ -15,7 +14,7 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-	const idValet = req.body.idValet;
+	const idValet = req.body;
 	const { data, error } = await supabase
 		.from("operations")
 		.select("*")
