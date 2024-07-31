@@ -1,9 +1,6 @@
+const {supabase} = require("../../config/supabase");
 
-
-
-const { supabase } = require("../../config/supabase");
-
-
+// Get all Operation
 exports.getAllOperation = async (req, res) => {
 	const { data, error } = await supabase
 		.from("operations")
@@ -14,14 +11,46 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-	const {idValet }= req.body;
+
+
 	const { data, error } = await supabase
 		.from("operations")
 		.select("*")
 		.eq("id_valet", idValet);
 	if (error) return res.status(400).json({ error: error.message });
 	res.status(200).json(data);
+
+    try {
+        // Extract the UUID parameter from req.params
+        const {idValet} = req.body; 
+
+        // Check if idValet is empty
+        if (!idValet) {
+			console.log(idValet)
+			return res.status(400).json({ error: "Can't find the id" });
+        }
+
+        // Query the database
+        const { data, error } = await supabase
+            .from("operations")
+            .select("*")
+            .eq("id_valet", idValet);
+
+        // Handle potential Supabase errors
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        // Return the data
+        res.status(200).json(data);
+    } catch (err) {
+        // Handle unexpected errors
+        console.log(err);
+        res.status(500).json({ error: "Cannot find an operation" });
+    }
+>>>>>>> main
 };
+
 // Get all Valet Not Afected
 exports.getAllAvailableValet = async (req, res) => {
 	const { data, error } = await supabase
@@ -145,7 +174,7 @@ exports.affectValet = async (req, res) => {
 		.from("operations")
 		.select("*")
 		.eq("code_operation", code_operation)
-		.eq("status", "Completed");
+		.eq("status", "Waiting Valet Return");
 
 	if (errorCompleted) {
 		return res.status(400).json({ error: errorCompleted.message });
@@ -160,11 +189,11 @@ exports.affectValet = async (req, res) => {
 			.update({
 				valet_aller: valetAller,
 				id_valet: id_valet,
-				status: "Ended",
+				status: "Affected",
 				affected_return_at: new Date().toISOString(),
 			})
 			.eq("code_operation", code_operation)
-			.eq("status", "Completed");
+			.eq("status", "Waiting Valet Return");
 
 		if (operationError) {
 			return res.status(400).json({ error: operationError.message });

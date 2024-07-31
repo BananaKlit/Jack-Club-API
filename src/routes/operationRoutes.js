@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const allOperation = require("../controllers/operations/valetAffectation");
-
+const {authenticateToken}=require("../controllers/auth/authController")
 /**
  * @swagger
  * /operations:
@@ -81,7 +81,7 @@ const allOperation = require("../controllers/operations/valetAffectation");
  */
 router.get("/", allOperation.getAllOperation);
 router.get("/valet-available", allOperation.getAllAvailableValet);
-router.get("/valetoperations", allOperation.getAllOperationByValet);
+router.get("/valetoperations/:id", allOperation.getAllOperationByValet);
 /**
  * @swagger
  * /operations/affectValet:
