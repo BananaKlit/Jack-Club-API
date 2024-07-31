@@ -103,23 +103,33 @@ exports.clientLogin = async (req, res) => {
 //Jwt validation
 exports.authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-	console.log("Auth Header:"+authHeader)
-    const token = authHeader
-	console.log("Token:"+token)
-	
-    if (!token) {
+    console.log("Auth Header: " + authHeader);
+
+    if (!authHeader) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // Remove the "Bearer " prefix from the auth header
+    const token = authHeader.replace('Bearer ', '');
+
     try {
         // Verify the token using your JWT secret
-        const decodedToken = verify(token, supabaseSecret);
-		console.log("Decoded Token"+decodedToken)
+        const verifiedToken = verify(token, supabaseSecret);
+
+        if (!verifiedToken) {
+            console.log("Invalid token");
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+
+        // Token is valid, continue processing
+        console.log("Verified Token: " + verifiedToken);
         next();
     } catch (error) {
-        return res.status(401).json({decodedToken:decodedToken, error: 'Invalid token' });
+        console.error("Error verifying token:", error);
+        return res.status(401).json({ error: 'Invalid token' });
     }
 };
+
 
 
 
