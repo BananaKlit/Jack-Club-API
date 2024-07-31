@@ -48,7 +48,6 @@ exports.getAllOperationByValet = async (req, res) => {
         console.log(err);
         res.status(500).json({ error: "Cannot find an operation" });
     }
->>>>>>> main
 };
 
 // Get all Valet Not Afected
