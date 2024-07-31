@@ -4,7 +4,7 @@ const { supabase } = require("../../config/supabase");
 
 
 exports.getAllValets = async (req, res) => {
-	const { data, error } = await supabase.from("Valet").select("*");
+	const { data, error } = await supabase.from("valet").select("*");
 	if (error) return res.status(400).json({ error: error.message });
 	res.status(200).json(data);
 };
@@ -13,7 +13,7 @@ exports.getAllValets = async (req, res) => {
 exports.getValetById = async (req, res) => {
 	const { id } = req.params;
 	const { data, error } = await supabase
-		.from("Valet")
+		.from("valet")
 		.select("*")
 		.eq("id", id)
 		.single();
@@ -25,7 +25,7 @@ exports.getValetById = async (req, res) => {
 exports.createValet = async (req, res) => {
 	const { user_id, name, phone } = req.body;
 	const { data, error } = await supabase
-		.from("Valet")
+		.from("valet")
 		.insert([{ user_id, name, phone }]);
 	if (error) return res.status(400).json({ error: error.message });
 	res.status(201).json(data);
@@ -36,7 +36,7 @@ exports.updateValet = async (req, res) => {
 	const { id } = req.params;
 	const { name, phone } = req.body;
 	const { data, error } = await supabase
-		.from("Valet")
+		.from("valet")
 		.update({ name, phone })
 		.eq("id", id);
 	if (error) return res.status(400).json({ error: error.message });
@@ -46,7 +46,7 @@ exports.updateValet = async (req, res) => {
 // Delete a valet
 exports.deleteValet = async (req, res) => {
 	const { id } = req.params;
-	const { data, error } = await supabase.from("Valet").delete().eq("id", id);
+	const { data, error } = await supabase.from("valet").delete().eq("id", id);
 	if (error) return res.status(400).json({ error: error.message });
 	res.status(200).json(data);
 };
