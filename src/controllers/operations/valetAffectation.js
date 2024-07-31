@@ -1,4 +1,4 @@
-const supabase = require("../../config/supabase");
+const {supabase} = require("../../config/supabase");
 
 // Get all Operation
 exports.getAllOperation = async (req, res) => {
@@ -12,14 +12,36 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-	const idValet = req.body.idValet;
-	const { data, error } = await supabase
-		.from("operations")
-		.select("*")
-		.eq("id_valet", idValet);
-	if (error) return res.status(400).json({ error: error.message });
-	res.status(200).json(data);
+    try {
+        // Extract the UUID parameter from req.params
+        const {idValet} = req.body; // Adjust based on your route definition
+
+        // Check if idValet is a valid UUID (Optional, but good for validation)
+        if (!idValet) {
+			console.log(idValet)
+			return res.status(400).json({ error: "Can't find the id" });
+        }
+
+        // Query the database
+        const { data, error } = await supabase
+            .from("operations")
+            .select("*")
+            .eq("id_valet", idValet);
+
+        // Handle potential Supabase errors
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        // Return the data
+        res.status(200).json(data);
+    } catch (err) {
+        // Handle unexpected errors
+        console.log(err);
+        res.status(500).json({ error: "Cannot find an operation" });
+    }
 };
+
 // Get all Valet Not Afected
 exports.getAllAvailableValet = async (req, res) => {
 	const { data, error } = await supabase
