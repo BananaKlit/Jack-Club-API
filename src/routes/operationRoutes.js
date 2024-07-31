@@ -81,7 +81,7 @@ const {authenticateToken}=require("../controllers/auth/authController")
  */
 router.get("/", allOperation.getAllOperation);
 router.get("/valet-available", allOperation.getAllAvailableValet);
-router.get("/valetoperations/:id", allOperation.getAllOperationByValet);
+router.get("/valetoperations", allOperation.getAllOperationByValet);
 /**
  * @swagger
  * /operations/affectValet:
