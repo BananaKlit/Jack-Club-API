@@ -14,7 +14,7 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-	const idValet = req.body;
+	const {idValet }= req.body;
 	const { data, error } = await supabase
 		.from("operations")
 		.select("*")
