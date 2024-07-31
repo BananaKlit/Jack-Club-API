@@ -4,7 +4,6 @@ const {supabase} = require("../../config/supabase");
 exports.getAllOperation = async (req, res) => {
 	const { data, error } = await supabase
 		.from("operations")
-
 		.select("*")
 		.eq("status", "Pending");
 	if (error) return res.status(400).json({ error: error.message });
@@ -12,11 +11,19 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-    try {
+	
         // Extract the UUID parameter from req.params
-        const {idValet} = req.body; // Adjust based on your route definition
+	const {idValet} = req.body; 
+	const { data, error } = await supabase
+		.from("operations")
+		.select("*")
+		.eq("id_valet", idValet);
+	if (error) return res.status(400).json({ error: error.message });
+	res.status(200).json(data);
 
-        // Check if idValet is a valid UUID (Optional, but good for validation)
+    try {
+       
+        // Check if idValet is empty
         if (!idValet) {
 			console.log(idValet)
 			return res.status(400).json({ error: "Can't find the id" });
