@@ -79,9 +79,9 @@ const {authenticateToken}=require("../controllers/auth/authController")
  *                   type: string
  *                   example: "An error message"
  */
-router.get("/", allOperation.getAllOperation);
-router.get("/valet-available", allOperation.getAllAvailableValet);
-router.get("/valetoperations", allOperation.getAllOperationByValet);
+router.get("/",authenticateToken, allOperation.getAllOperation);
+router.get("/valet-available",authenticateToken, allOperation.getAllAvailableValet);
+router.get("/valetoperations",authenticateToken, allOperation.getAllOperationByValet);
 /**
  * @swagger
  * /operations/affectValet:
@@ -159,7 +159,7 @@ router.get("/valetoperations", allOperation.getAllOperationByValet);
  *                 error:
  *                   type: string
  */
-router.post("/affectValet", allOperation.affectValet);
+router.post("/affectValet",authenticateToken, allOperation.affectValet);
 // router.get("/:id", adminController.getAdminById);
 // router.post("/", adminController.createAdmin);
 // router.put("/:id", adminController.updateAdmin);
