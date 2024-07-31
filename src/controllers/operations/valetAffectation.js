@@ -11,8 +11,9 @@ exports.getAllOperation = async (req, res) => {
 };
 // Get all Operation By Valet
 exports.getAllOperationByValet = async (req, res) => {
-
-
+	
+        // Extract the UUID parameter from req.params
+	const {idValet} = req.body; 
 	const { data, error } = await supabase
 		.from("operations")
 		.select("*")
@@ -21,9 +22,7 @@ exports.getAllOperationByValet = async (req, res) => {
 	res.status(200).json(data);
 
     try {
-        // Extract the UUID parameter from req.params
-        const {idValet} = req.body; 
-
+       
         // Check if idValet is empty
         if (!idValet) {
 			console.log(idValet)
